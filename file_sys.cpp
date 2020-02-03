@@ -117,9 +117,6 @@ void directory::remove (const string& filename) {
 }
 
 inode_ptr directory::mkdir (const string& dirname, inode_state& state) {
-   /* TO DO: error handling
-      throw file_error ("directory of same name already exists");
-   }*/ 
    inode_ptr node = make_shared<inode>(file_type::DIRECTORY_TYPE);
    node->getPath() = state.getCWD()->getPath() + dirname + "/";
    node->getContents()->getDirents().insert(
@@ -130,7 +127,6 @@ inode_ptr directory::mkdir (const string& dirname, inode_state& state) {
            pair<string, inode_ptr>(dirname + "/", node));
    DEBUGF ('i', dirname);
    DEBUGF ('c', "this: " << endl);
-   this->printDirents();
    return node;
 }
 

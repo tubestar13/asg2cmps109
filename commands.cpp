@@ -95,7 +95,14 @@ void fn_make (inode_state& state, const wordvec& words){
 void fn_mkdir (inode_state& state, const wordvec& words){
    DEBUGF ('c', state);
    DEBUGF ('c', words);
-   // TODO: error handling 
+   map<string, inode_ptr> dirents = 
+      state.getCWD()->getContents()->getDirents();
+   map<string, inode_ptr>::iterator dd;
+   for(dd = dirents.begin(); dd != dirents.end(); dd++){
+      if(words[1]+"/" == dd->first)
+         throw command_error ("mkdir: cannot create directory '"
+            + words[1] + "': File exists");
+   }
    state.getCWD()->getContents()->mkdir(words[1], state);
 }
 

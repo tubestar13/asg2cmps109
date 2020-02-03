@@ -88,6 +88,8 @@ void fn_prompt (inode_state& state, const wordvec& words){
 }
 
 void fn_pwd (inode_state& state, const wordvec& words){
+   inode_ptr pwd = state.getCWD();
+   cout << pwd << endl;
    DEBUGF ('c', state);
    DEBUGF ('c', words);
 }

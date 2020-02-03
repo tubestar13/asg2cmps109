@@ -34,7 +34,7 @@ inode_state::inode_state() {
    root->getContents()->getDirents().insert
       (pair<string, inode_ptr>("..", root));
    DEBUGF ('i', "root = " << root << ", cwd = " << cwd
-          << ", prompt = \"" << prompt() << "\"");
+          << ", prompt = \"" << prompt() << "\""); 
 }
 
 const string& inode_state::prompt() const { return prompt_; }

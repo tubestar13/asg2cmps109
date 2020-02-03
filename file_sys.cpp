@@ -105,7 +105,7 @@ void plain_file::writefile (const wordvec& words) {
 }
 
 size_t directory::size() const {
-   size_t size {0};
+   int size = dirents.size();
    DEBUGF ('i', "size = " << size);
    return size;
 }
@@ -124,8 +124,21 @@ inode_ptr directory::mkfile (const string& filename) {
    return nullptr;
 }
 
-map<string, inode_ptr> directory::getDirents() { return dirents; }
+map<string, inode_ptr>& directory::getDirents() { return dirents; }
 
-map<string, inode_ptr> base_file::getDirents() {
+map<string, inode_ptr>& base_file::getDirents() {
    throw file_error ("is a " + error_file_type());
+}
+
+void base_file::printDirents() { 
+   throw file_error ("is a " + error_file_type());
+}
+
+void directory::printDirents() {
+   map<string, inode_ptr>::iterator d2p;
+   for(d2p = dirents.begin(); d2p != dirents.end(); d2p++){
+         cout << "    " << d2p->second->get_inode_nr() << "    "
+            << d2p->second->getContents()->size() << "    "
+            << d2p->first << endl;
+   }
 }

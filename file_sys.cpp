@@ -126,8 +126,6 @@ inode_ptr directory::mkdir (const string& dirname, inode_state& state) {
            pair<string, inode_ptr>("..",  state.getCWD()));
    this->getDirents().insert(
            pair<string, inode_ptr>(dirname + "/", node));
-   //DEBUGF ('i', dirname);
-   //DEBUGF ('c', "this: " << endl);
    return node;
 }
 
@@ -147,7 +145,6 @@ map<string, inode_ptr>& directory::getDirents() { return dirents; }
 map<string, inode_ptr>& base_file::getDirents() {
    throw file_error ("is a " + error_file_type());
 }
-
 void base_file::printDirents() { 
    throw file_error ("is a " + error_file_type());
 }

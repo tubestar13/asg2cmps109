@@ -127,7 +127,7 @@ inode_ptr directory::mkdir (const string& dirname, inode_state& state) {
    node->getContents()->getDirents().insert(
            pair<string, inode_ptr>("..",  state.getCWD()));
    this->getDirents().insert(
-           pair<string, inode_ptr>(dirname, node));
+           pair<string, inode_ptr>(dirname + "/", node));
    DEBUGF ('i', dirname);
    DEBUGF ('c', "this: " << endl);
    this->printDirents();

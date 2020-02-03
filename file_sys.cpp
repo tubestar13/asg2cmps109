@@ -83,12 +83,10 @@ void base_file::remove (const string&) {
 }
 
 inode_ptr base_file::mkdir (const string&, inode_state& state) {
-   DEBUGF ('z', state);
    throw file_error ("is a " + error_file_type());
 }
 
 inode_ptr base_file::mkfile (const string&, inode_state& state) {
-   DEBUGF ('z', state);
    throw file_error ("is a " + error_file_type());
 }
 
@@ -100,21 +98,11 @@ size_t plain_file::size() const {
 }
 
 const wordvec& plain_file::readfile() const {
-   DEBUGF ('i', data)
-   
-   int i = 0;
-   for (string word: data) {
-      i++;
-      if (i < 3) { continue; }
-      cout << word << " ";
-   }
-   cout << endl;
-   return data; 
+   DEBUGF ('i', data);
+   return data;
 }
 
 void plain_file::writefile (const wordvec& words) {
-   //this->data = words.remove(words.begin(), words.begin()+2);
-   this->data = words;
    DEBUGF ('i', words);
 }
 
@@ -139,19 +127,15 @@ inode_ptr directory::mkdir (const string& dirname, inode_state& state) {
    node->getContents()->getDirents().insert(
            pair<string, inode_ptr>("..",  state.getCWD()));
    this->getDirents().insert(
-   pair<string, inode_ptr>(dirname + "/", node));
+           pair<string, inode_ptr>(dirname, node));
+   DEBUGF ('i', dirname);
+   DEBUGF ('c', "this: " << endl);
    return node;
 }
 
 inode_ptr directory::mkfile(const string& filename,inode_state& state){
-   inode_ptr node = make_shared<inode>(file_type::PLAIN_TYPE);
-   node->getPath() = state.getCWD()->getPath() + filename;
-
-   this->getDirents().insert(
-           pair<string, inode_ptr>(filename, node));
    DEBUGF ('i', filename);
-   return node;
-
+   return nullptr;
 }
 
 map<string, inode_ptr>& directory::getDirents() { return dirents; }

@@ -63,6 +63,8 @@ void fn_exit (inode_state& state, const wordvec& words){
 }
 
 void fn_ls (inode_state& state, const wordvec& words){
+   cout << state.getCWD()->getPath() << ":" << endl;  
+   state.getCWD()->getContents()->printDirents();
    DEBUGF ('c', state);
    DEBUGF ('c', words);
 }
@@ -80,7 +82,8 @@ void fn_make (inode_state& state, const wordvec& words){
 void fn_mkdir (inode_state& state, const wordvec& words){
    DEBUGF ('c', state);
    DEBUGF ('c', words);
-
+   // TODO: error handling 
+   state.getCWD()->getContents()->mkdir(words[1], state);
 }
 
 void fn_prompt (inode_state& state, const wordvec& words){

@@ -99,7 +99,8 @@ class base_file {
       virtual void remove (const string& filename);
       virtual inode_ptr mkdir (const string& dirname, inode_state& state);
       virtual inode_ptr mkfile (const string& filename, inode_state& state);
-      virtual map<string, inode_ptr> getDirents();
+      virtual map<string, inode_ptr>& getDirents();
+      virtual void printDirents();
 };
 
 // class plain_file -
@@ -155,7 +156,8 @@ class  directory: public base_file {
       virtual void remove (const string& filename) override;
       virtual inode_ptr mkdir (const string& dirname, inode_state& state) override;
       virtual inode_ptr mkfile (const string& filename, inode_state& state) override;
-      virtual map<string, inode_ptr> getDirents() override;
+      virtual map<string, inode_ptr>& getDirents() override;
+      virtual void printDirents() override;
 };
 
 #endif

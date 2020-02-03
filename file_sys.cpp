@@ -107,7 +107,7 @@ void plain_file::writefile (const wordvec& words) {
 }
 
 size_t directory::size() const {
-   size_t size {0};
+   int size = dirents.size();
    DEBUGF ('i', "size = " << size);
    return size;
 }
@@ -117,14 +117,20 @@ void directory::remove (const string& filename) {
 }
 
 inode_ptr directory::mkdir (const string& dirname, inode_state& state) {
-   if ( 
+   /* TO DO: error handling
+      throw file_error ("directory of same name already exists");
+   }*/ 
    inode_ptr node = make_shared<inode>(file_type::DIRECTORY_TYPE);
    node->getPath() = state.getCWD()->getPath() + dirname + "/";
-   this->getDirents().insert(pair<string, inode_ptr>(".", node));
-   this->getDirents().insert(
+   node->getContents()->getDirents().insert(
+           pair<string, inode_ptr>(".", node));
+   node->getContents()->getDirents().insert(
            pair<string, inode_ptr>("..",  state.getCWD()));
+   this->getDirents().insert(
+           pair<string, inode_ptr>(dirname, node));
    DEBUGF ('i', dirname);
-
+   DEBUGF ('c', "this: " << endl);
+   this->printDirents();
    return node;
 }
 
@@ -133,8 +139,21 @@ inode_ptr directory::mkfile(const string& filename,inode_state& state){
    return nullptr;
 }
 
-map<string, inode_ptr> directory::getDirents() { return dirents; }
+map<string, inode_ptr>& directory::getDirents() { return dirents; }
 
-map<string, inode_ptr> base_file::getDirents() {
+map<string, inode_ptr>& base_file::getDirents() {
    throw file_error ("is a " + error_file_type());
+}
+
+void base_file::printDirents() { 
+   throw file_error ("is a " + error_file_type());
+}
+
+void directory::printDirents() {
+   map<string, inode_ptr>::iterator d2p;
+   for(d2p = dirents.begin(); d2p != dirents.end(); d2p++){
+         cout << "    " << d2p->second->get_inode_nr() << "    "
+            << d2p->second->getContents()->size() << "    "
+            << d2p->first << endl;
+   }
 }

@@ -29,6 +29,7 @@ inode_state::inode_state() {
    
    root = make_shared<inode>(file_type::DIRECTORY_TYPE);
    cwd = root;
+   root->getPath() = "/";
    root->getContents()->getDirents().insert
       (pair<string, inode_ptr>(".", root));
    root->getContents()->getDirents().insert

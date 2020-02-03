@@ -105,9 +105,10 @@ const wordvec& plain_file::readfile() const {
    int i = 0;
    for (string word: data) {
       i++;
-      if (i < 2) { continue; }
+      if (i < 3) { continue; }
       cout << word << " ";
    }
+   cout << endl;
    return data; 
 }
 

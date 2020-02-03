@@ -42,6 +42,17 @@ int exit_status_message() {
 void fn_cat (inode_state& state, const wordvec& words){
    DEBUGF ('c', state);
    DEBUGF ('c', words);
+   map<string, inode_ptr> dirents = 
+      state.getCWD()->getContents()->getDirents();
+   map<string, inode_ptr>::iterator dd;
+   for(dd = dirents.begin(); dd != dirents.end(); dd++){
+      if(words[1] == dd->first) {
+         dd->second->getContents()->readfile();
+         return;
+      }
+   }
+
+   throw command_error("cat: "+words[1]+": No such file or directory");
 }
 
 void fn_cd (inode_state& state, const wordvec& words){

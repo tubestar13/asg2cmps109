@@ -83,10 +83,12 @@ void base_file::remove (const string&) {
 }
 
 inode_ptr base_file::mkdir (const string&, inode_state& state) {
+   DEBUGF ('z', state);
    throw file_error ("is a " + error_file_type());
 }
 
 inode_ptr base_file::mkfile (const string&, inode_state& state) {
+   DEBUGF ('z', state);
    throw file_error ("is a " + error_file_type());
 }
 
@@ -98,11 +100,19 @@ size_t plain_file::size() const {
 }
 
 const wordvec& plain_file::readfile() const {
-   DEBUGF ('i', data);
-   return data;
+   DEBUGF ('i', data)
+   
+   int i = 0;
+   for (string word: data) {
+      i++;
+      if (i < 2) { continue; }
+      cout << word << " ";
+   }
+   return data; 
 }
 
 void plain_file::writefile (const wordvec& words) {
+   //this->data = words.remove(words.begin(), words.begin()+2);
    this->data = words;
    DEBUGF ('i', words);
 }
@@ -136,7 +146,7 @@ inode_ptr directory::mkfile(const string& filename,inode_state& state){
    this->getDirents().insert(
            pair<string, inode_ptr>(filename, node));
    DEBUGF ('i', filename);
-   return nullptr;
+   return node;
 
 }
 

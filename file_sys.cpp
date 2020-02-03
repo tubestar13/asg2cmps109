@@ -28,12 +28,14 @@ ostream& operator<< (ostream& out, file_type type) {
 inode_state::inode_state() {
    
    root = make_shared<inode>(file_type::DIRECTORY_TYPE);
-   cwd = root;
+
    root->getPath() = "/";
    root->getContents()->getDirents().insert
       (pair<string, inode_ptr>(".", root));
    root->getContents()->getDirents().insert
       (pair<string, inode_ptr>("..", root));
+  
+   cwd = root;
    DEBUGF ('i', "root = " << root << ", cwd = " << cwd
           << ", prompt = \"" << prompt() << "\""); 
 }
@@ -80,11 +82,11 @@ void base_file::remove (const string&) {
    throw file_error ("is a " + error_file_type());
 }
 
-inode_ptr base_file::mkdir (const string&) {
+inode_ptr base_file::mkdir (const string&, inode_state& state) {
    throw file_error ("is a " + error_file_type());
 }
 
-inode_ptr base_file::mkfile (const string&) {
+inode_ptr base_file::mkfile (const string&, inode_state& state) {
    throw file_error ("is a " + error_file_type());
 }
 
@@ -111,15 +113,28 @@ size_t directory::size() const {
 }
 
 void directory::remove (const string& filename) {
-   DEBUGF ('i', filename);
+  DEBUGF ('i', filename);
 }
 
-inode_ptr directory::mkdir (const string& dirname) {
+inode_ptr directory::mkdir (const string& dirname, inode_state& state) {
+   /* TO DO: error handling
+      throw file_error ("directory of same name already exists");
+   }*/ 
+   inode_ptr node = make_shared<inode>(file_type::DIRECTORY_TYPE);
+   node->getPath() = state.getCWD()->getPath() + dirname + "/";
+   node->getContents()->getDirents().insert(
+           pair<string, inode_ptr>(".", node));
+   node->getContents()->getDirents().insert(
+           pair<string, inode_ptr>("..",  state.getCWD()));
+   this->getDirents().insert(
+           pair<string, inode_ptr>(dirname, node));
    DEBUGF ('i', dirname);
-   return nullptr;
+   DEBUGF ('c', "this: " << endl);
+   this->printDirents();
+   return node;
 }
 
-inode_ptr directory::mkfile (const string& filename) {
+inode_ptr directory::mkfile(const string& filename,inode_state& state){
    DEBUGF ('i', filename);
    return nullptr;
 }

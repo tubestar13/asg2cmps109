@@ -97,8 +97,8 @@ class base_file {
       virtual const wordvec& readfile() const;
       virtual void writefile (const wordvec& newdata);
       virtual void remove (const string& filename);
-      virtual inode_ptr mkdir (const string& dirname);
-      virtual inode_ptr mkfile (const string& filename);
+      virtual inode_ptr mkdir (const string& dirname, inode_state& state);
+      virtual inode_ptr mkfile (const string& filename, inode_state& state);
       virtual map<string, inode_ptr>& getDirents();
       virtual void printDirents();
 };
@@ -154,8 +154,8 @@ class  directory: public base_file {
    public:
       virtual size_t size() const override;
       virtual void remove (const string& filename) override;
-      virtual inode_ptr mkdir (const string& dirname) override;
-      virtual inode_ptr mkfile (const string& filename) override;
+      virtual inode_ptr mkdir (const string& dirname, inode_state& state) override;
+      virtual inode_ptr mkfile (const string& filename, inode_state& state) override;
       virtual map<string, inode_ptr>& getDirents() override;
       virtual void printDirents() override;
 };

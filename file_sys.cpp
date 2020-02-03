@@ -113,7 +113,6 @@ const wordvec& plain_file::readfile() const {
 }
 
 void plain_file::writefile (const wordvec& words) {
-   //this->data = words.remove(words.begin(), words.begin()+2);
    this->data = words;
    DEBUGF ('i', words);
 }

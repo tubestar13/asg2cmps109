@@ -86,6 +86,10 @@ void fn_ls (inode_state& state, const wordvec& words){
       state.getCWD()->getContents()->printDirents();
       state.getCWD() = temp;
    }
+   else if(words[1] == ".") {
+      cout << ".:" << endl;
+      state.getCWD()->getContents()->printDirents();
+   }
    else{
       map<string, inode_ptr>::iterator d2p;
       map<string, inode_ptr> dirents = 
@@ -93,9 +97,17 @@ void fn_ls (inode_state& state, const wordvec& words){
       for(d2p = dirents.begin(); d2p != dirents.end(); d2p++){
          if(d2p->second->getPath() == words[1] or 
             d2p->first == words[1]) {
-            cout << "/" << words[1] << ":" << endl;
-            d2p->second->getContents()->printDirents();
-            break;
+            if(words[1] != ".."){
+               cout << "/" << words[1] << ":" << endl;
+               d2p->second->getContents()->printDirents();
+               break;
+            }
+            else{
+               cout << words[1] << ":" << endl;
+               d2p->second->getContents()->printDirents();
+               state.getCWD() = temp;
+               break;
+            }
          }
       }
    DEBUGF ('c', state);
@@ -104,6 +116,21 @@ void fn_ls (inode_state& state, const wordvec& words){
 }
 
 void fn_lsr (inode_state& state, const wordvec& words){
+   inode_ptr temp = state.getCWD();
+   map<string, inode_ptr>::iterator d2p;
+   map<string, inode_ptr> dirents = 
+      state.getCWD()->getContents()->getDirents();
+   for(d2p = dirents.begin(); d2p != dirents.end(); d2p++){
+      if(d2p->second->getContents()->getType() == "directory" 
+         and d2p->first != "." and d2p->first != "..") {
+         cout << d2p->second->getPath() << ":" << endl;
+         d2p->second->getContents()->printDirents();
+         state.getCWD() = d2p->second;
+         fn_lsr(state, words);
+         break;
+      }
+   }
+   state.getCWD() = temp;  
    DEBUGF ('c', state);
    DEBUGF ('c', words);
    

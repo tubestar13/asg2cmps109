@@ -42,6 +42,17 @@ int exit_status_message() {
 void fn_cat (inode_state& state, const wordvec& words){
    DEBUGF ('c', state);
    DEBUGF ('c', words);
+   map<string, inode_ptr> dirents = 
+      state.getCWD()->getContents()->getDirents();
+   map<string, inode_ptr>::iterator dd;
+   for(dd = dirents.begin(); dd != dirents.end(); dd++){
+      if(words[1] == dd->first) {
+         dd->second->getContents()->readfile();
+         return;
+      }
+   }
+
+   throw command_error("cat: "+words[1]+": No such file or directory");
 }
 
 void fn_cd (inode_state& state, const wordvec& words){
@@ -139,6 +150,13 @@ void fn_lsr (inode_state& state, const wordvec& words){
 void fn_make (inode_state& state, const wordvec& words){
    DEBUGF ('c', state);
    DEBUGF ('c', words);
+   if(words.size() < 2) {
+       throw command_error("make: invalid argument; missing words");
+   return;
+   }
+   inode_ptr new_file = state.getCWD()->getContents()->mkfile(
+           words[1], state);
+   new_file->getContents()->writefile(words);
 }
 
 void fn_mkdir (inode_state& state, const wordvec& words){
@@ -153,6 +171,7 @@ void fn_mkdir (inode_state& state, const wordvec& words){
             + words[1] + "': File exists");
    }
    state.getCWD()->getContents()->mkdir(words[1], state);
+
 }
 
 void fn_prompt (inode_state& state, const wordvec& words){

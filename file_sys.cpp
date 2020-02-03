@@ -103,6 +103,7 @@ const wordvec& plain_file::readfile() const {
 }
 
 void plain_file::writefile (const wordvec& words) {
+   this->data = words;
    DEBUGF ('i', words);
 }
 
@@ -117,9 +118,6 @@ void directory::remove (const string& filename) {
 }
 
 inode_ptr directory::mkdir (const string& dirname, inode_state& state) {
-   /* TO DO: error handling
-      throw file_error ("directory of same name already exists");
-   }*/ 
    inode_ptr node = make_shared<inode>(file_type::DIRECTORY_TYPE);
    node->getPath() = state.getCWD()->getPath() + dirname + "/";
    node->getContents()->getDirents().insert(
@@ -128,15 +126,20 @@ inode_ptr directory::mkdir (const string& dirname, inode_state& state) {
            pair<string, inode_ptr>("..",  state.getCWD()));
    this->getDirents().insert(
            pair<string, inode_ptr>(dirname + "/", node));
-   DEBUGF ('i', dirname);
-   DEBUGF ('c', "this: " << endl);
-   this->printDirents();
+   //DEBUGF ('i', dirname);
+   //DEBUGF ('c', "this: " << endl);
    return node;
 }
 
 inode_ptr directory::mkfile(const string& filename,inode_state& state){
+   inode_ptr node = make_shared<inode>(file_type::PLAIN_TYPE);
+   node->getPath() = state.getCWD()->getPath() + filename;
+
+   this->getDirents().insert(
+           pair<string, inode_ptr>(filename, node));
    DEBUGF ('i', filename);
    return nullptr;
+
 }
 
 map<string, inode_ptr>& directory::getDirents() { return dirents; }

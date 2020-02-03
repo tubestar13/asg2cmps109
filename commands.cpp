@@ -79,13 +79,21 @@ void fn_lsr (inode_state& state, const wordvec& words){
 void fn_make (inode_state& state, const wordvec& words){
    DEBUGF ('c', state);
    DEBUGF ('c', words);
+   if(words.size() < 2) {
+       throw command_error("make: invalid argument; missing words");
+   return;
+   }
+   inode_ptr new_file = state.getCWD()->getContents()->mkfile(
+           words[1], state);
+   new_file->getContents()->writefile(words);
 }
 
 void fn_mkdir (inode_state& state, const wordvec& words){
    DEBUGF ('c', state);
    DEBUGF ('c', words);
-   // TODO: error handling 
+   // TO DO: error handling 
    state.getCWD()->getContents()->mkdir(words[1], state);
+
 }
 
 void fn_prompt (inode_state& state, const wordvec& words){

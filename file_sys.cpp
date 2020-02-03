@@ -129,7 +129,6 @@ map<string, inode_ptr>& directory::getDirents() { return dirents; }
 map<string, inode_ptr>& base_file::getDirents() {
    throw file_error ("is a " + error_file_type());
 }
-
 void base_file::printDirents() { 
    throw file_error ("is a " + error_file_type());
 }

@@ -63,8 +63,10 @@ void fn_exit (inode_state& state, const wordvec& words){
 }
 
 void fn_ls (inode_state& state, const wordvec& words){
-   cout << state.getCWD()->getPath() << ":" << endl;  
-   state.getCWD()->getContents()->printDirents();
+   if(words.size() == 1 or words[1] == "." ){
+      cout << state.getCWD()->getPath() << ":" << endl;  
+      state.getCWD()->getContents()->printDirents();
+   }
    DEBUGF ('c', state);
    DEBUGF ('c', words);
 }

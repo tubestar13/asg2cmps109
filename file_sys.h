@@ -41,7 +41,7 @@ class inode_state {
       inode_state (const inode_state&) = delete; // copy ctor
       inode_state& operator= (const inode_state&) = delete; // op=
       inode_state();
-      const string& prompt() const;
+      string& prompt();
       inode_ptr& getCWD() { return cwd; }
       inode_ptr& getRoot() { return root; }
 };

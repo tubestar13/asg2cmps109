@@ -40,7 +40,7 @@ inode_state::inode_state() {
           << ", prompt = \"" << prompt() << "\""); 
 }
 
-const string& inode_state::prompt() const { return prompt_; }
+string& inode_state::prompt() { return prompt_; }
 
 ostream& operator<< (ostream& out, const inode_state& state) {
    out << "inode_state: root = " << state.root

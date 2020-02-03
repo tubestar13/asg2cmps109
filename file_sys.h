@@ -44,7 +44,6 @@ class inode_state {
       const string& prompt() const;
       inode_ptr& getCWD() { return cwd; }
       inode_ptr& getRoot() { return root; }
-      void setPrompt(string nPrompt) { prompt_ = nPrompt; }
 };
 
 // class inode -
@@ -100,6 +99,7 @@ class base_file {
       virtual void remove (const string& filename);
       virtual inode_ptr mkdir (const string& dirname);
       virtual inode_ptr mkfile (const string& filename);
+      virtual map<string, inode_ptr> getDirents();
 };
 
 // class plain_file -
@@ -155,6 +155,7 @@ class  directory: public base_file {
       virtual void remove (const string& filename) override;
       virtual inode_ptr mkdir (const string& dirname) override;
       virtual inode_ptr mkfile (const string& filename) override;
+      virtual map<string, inode_ptr> getDirents() override;
 };
 
 #endif

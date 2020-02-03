@@ -26,10 +26,13 @@ ostream& operator<< (ostream& out, file_type type) {
 }
 
 inode_state::inode_state() {
+   
    root = make_shared<inode>(file_type::DIRECTORY_TYPE);
    cwd = root;
-   root.contents.dirents.insert(pair<string,inode_ptr>(".",root));
-   root.contents.dirents.insert(pair<string,inode_ptr>("..",root));
+   root->getContents()->getDirents().insert
+      (pair<string, inode_ptr>(".", root));
+   root->getContents()->getDirents().insert
+      (pair<string, inode_ptr>("..", root));
    DEBUGF ('i', "root = " << root << ", cwd = " << cwd
           << ", prompt = \"" << prompt() << "\"");
 }
@@ -120,3 +123,8 @@ inode_ptr directory::mkfile (const string& filename) {
    return nullptr;
 }
 
+map<string, inode_ptr> directory::getDirents() { return dirents; }
+
+map<string, inode_ptr> base_file::getDirents() {
+   throw file_error ("is a " + error_file_type());
+}

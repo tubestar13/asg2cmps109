@@ -118,13 +118,16 @@ void directory::remove (const string& filename) {
 
 inode_ptr directory::mkdir (const string& dirname, inode_state& state) {
    inode_ptr node = make_shared<inode>(file_type::DIRECTORY_TYPE);
-   node->getPath() = state.getCWD()->getPath() + dirname + "/";
+   if(state.getCWD()->getPath() == "/")
+      node->getPath() = state.getCWD()->getPath() + dirname;
+   else
+      node->getPath() = state.getCWD()->getPath() + "/" + dirname;
    node->getContents()->getDirents().insert(
            pair<string, inode_ptr>(".", node));
    node->getContents()->getDirents().insert(
            pair<string, inode_ptr>("..",  state.getCWD()));
    this->getDirents().insert(
-           pair<string, inode_ptr>(dirname + "/", node));
+           pair<string, inode_ptr>(dirname, node));
    DEBUGF ('i', dirname);
    DEBUGF ('c', "this: " << endl);
    return node;
@@ -147,8 +150,14 @@ void base_file::printDirents() {
 void directory::printDirents() {
    map<string, inode_ptr>::iterator d2p;
    for(d2p = dirents.begin(); d2p != dirents.end(); d2p++){
-         cout << "    " << d2p->second->get_inode_nr() << "    "
-            << d2p->second->getContents()->size() << "    "
-            << d2p->first << endl;
+         if(d2p->second->getContents()->getType() == "directory"
+            and d2p->first != "." and d2p->first !="..")
+            cout << "     " << d2p->second->get_inode_nr() << "       "
+               << d2p->second->getContents()->size() << "  "
+               << d2p->first << "/" << endl;
+         else
+            cout << "     " << d2p->second->get_inode_nr() << "       "
+               << d2p->second->getContents()->size() << "  "
+               << d2p->first << endl;
    }
 }

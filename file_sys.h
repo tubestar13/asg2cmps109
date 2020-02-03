@@ -101,6 +101,7 @@ class base_file {
       virtual inode_ptr mkfile (const string& filename, inode_state& state);
       virtual map<string, inode_ptr>& getDirents();
       virtual void printDirents();
+      virtual string getType() = 0;
 };
 
 // class plain_file -
@@ -119,10 +120,12 @@ class plain_file: public base_file {
          static const string result = "plain file";
          return result;
       }
+      string type = "plain file";
    public:
       virtual size_t size() const override;
       virtual const wordvec& readfile() const override;
       virtual void writefile (const wordvec& newdata) override;
+      virtual string getType() { return type; }
 };
 
 // class directory -
@@ -151,6 +154,7 @@ class  directory: public base_file {
          static const string result = "directory";
          return result;
       }
+      string type = "directory";
    public:
       virtual size_t size() const override;
       virtual void remove (const string& filename) override;
@@ -158,6 +162,7 @@ class  directory: public base_file {
       virtual inode_ptr mkfile (const string& filename, inode_state& state) override;
       virtual map<string, inode_ptr>& getDirents() override;
       virtual void printDirents() override;
+      virtual string getType() { return type; }
 };
 
 #endif

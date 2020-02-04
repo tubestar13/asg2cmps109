@@ -178,7 +178,7 @@ void fn_mkdir (inode_state& state, const wordvec& words){
       state.getCWD()->getContents()->getDirents();
    map<string, inode_ptr>::iterator dd;
    for(dd = dirents.begin(); dd != dirents.end(); dd++){
-      if(words[1]+"/" == dd->first)
+      if(words[1] == dd->first)
          throw command_error ("mkdir: cannot create directory '"
             + words[1] + "': File exists");
    }
@@ -202,19 +202,23 @@ void fn_pwd (inode_state& state, const wordvec& words){
 void fn_rm (inode_state& state, const wordvec& words){
    DEBUGF ('c', state);
    DEBUGF ('c', words);
- /*  map<string, inode_ptr> dirents = 
+   map<string, inode_ptr> dirents = 
       state.getCWD()->getContents()->getDirents();
    map<string, inode_ptr>::iterator dd;
    for(dd = dirents.begin(); dd != dirents.end(); dd++){
       if(words[1] == dd->first) {
-         dd->second->remove(words[1]);
-         return;
-       } else if (words[1] + "/" == dd->first) {
-         if 
+          if(dd->second->getContents()->getType() == "directory" 
+             && dd->second->getContents()->size() > 2) {
+             throw command_error ("rm: cannot remove has stuff in it");
+          } else {
+             state.getCWD()->getContents()->remove(words[1]);
+             return;
+          }
+      }
    }
 
    throw command_error(
-      "cat: "+words[1]+": No such file or directory");*/
+      "rm: "+words[1]+": No such file or directory");
 }
 
 void fn_rmr (inode_state& state, const wordvec& words){

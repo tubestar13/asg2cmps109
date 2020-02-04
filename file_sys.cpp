@@ -65,7 +65,6 @@ int inode::get_inode_nr() const {
    return inode_nr;
 }
 
-
 file_error::file_error (const string& what):
             runtime_error (what) {
 }
@@ -92,7 +91,6 @@ inode_ptr base_file::mkfile (const string&, inode_state& state) {
    throw file_error ("is a " + error_file_type());
 }
 
-
 size_t plain_file::size() const {
    size_t size {0};
    int s = 0;
@@ -132,7 +130,8 @@ size_t directory::size() const {
 }
 
 void directory::remove (const string& filename) {
-  DEBUGF ('i', filename);
+  DEBUGF ('i', "removing: " << filename << endl);
+  this->getDirents().erase(filename);
 }
 
 inode_ptr directory::mkdir (const string& dirname, inode_state& state) {

@@ -138,10 +138,12 @@ void fn_ls (inode_state& state, const wordvec& words){
 }
 
 void fn_lsr (inode_state& state, const wordvec& words){
+   // recursive depth-first preorder traversal
    inode_ptr temp = state.getCWD();
    map<string, inode_ptr>::iterator d2p;
    map<string, inode_ptr> dirents = 
       state.getCWD()->getContents()->getDirents();
+
    for(d2p = dirents.begin(); d2p != dirents.end(); d2p++){
       if(d2p->second->getContents()->getType() == "directory" 
          and d2p->first != "." and d2p->first != "..") {
@@ -149,7 +151,7 @@ void fn_lsr (inode_state& state, const wordvec& words){
          d2p->second->getContents()->printDirents();
          state.getCWD() = d2p->second;
          fn_lsr(state, words);
-         break;
+         //break;
       }
    }
    state.getCWD() = temp;  
@@ -208,7 +210,7 @@ void fn_rm (inode_state& state, const wordvec& words){
    for(dd = dirents.begin(); dd != dirents.end(); dd++){
       if(words[1] == dd->first) {
           if(dd->second->getContents()->getType() == "directory" 
-             && dd->second->getContents()->size() > 2) {
+             && dd->second->getContents()->size() > 0) {
              throw command_error ("rm: cannot remove has stuff in it");
           } else {
              state.getCWD()->getContents()->remove(words[1]);
@@ -222,6 +224,21 @@ void fn_rm (inode_state& state, const wordvec& words){
 }
 
 void fn_rmr (inode_state& state, const wordvec& words){
+  /* inode_ptr temp = state.getCWD();
+   map<string, inode_ptr>::iterator d2p;
+   map<string, inode_ptr> dirents = 
+      state.getCWD()->getContents()->getDirents();
+   for(d2p = dirents.begin(); d2p != dirents.end(); d2p++){
+      if(d2p->second->getContents()->getType() == "directory" 
+         and d2p->first != "." and d2p->first != "..") {
+         cout << d2p->second->getPath() << ":" << endl;
+         d2p->second->getContents()->printDirents();
+         state.getCWD() = d2p->second;
+         fn_rmr(state, words);
+         break;
+      }
+   }
+   state.getCWD() = temp;  */
    DEBUGF ('c', state);
    DEBUGF ('c', words);
 }

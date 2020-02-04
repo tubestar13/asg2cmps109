@@ -40,7 +40,7 @@ inode_state::inode_state() {
           << ", prompt = \"" << prompt() << "\""); 
 }
 
-const string& inode_state::prompt() const { return prompt_; }
+string& inode_state::prompt() { return prompt_; }
 
 ostream& operator<< (ostream& out, const inode_state& state) {
    out << "inode_state: root = " << state.root
@@ -138,7 +138,7 @@ inode_ptr directory::mkdir (const string& dirname, inode_state& state) {
    node->getContents()->getDirents().insert(
            pair<string, inode_ptr>("..",  state.getCWD()));
    this->getDirents().insert(
-   pair<string, inode_ptr>(dirname + "/", node));
+      pair<string, inode_ptr>(dirname, node));
    return node;
 }
 

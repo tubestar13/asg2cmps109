@@ -40,8 +40,6 @@ int exit_status_message() {
 }
 
 void fn_cat (inode_state& state, const wordvec& words){
-   DEBUGF ('c', state);
-   DEBUGF ('c', words);
    map<string, inode_ptr> dirents = 
       state.getCWD()->getContents()->getDirents();
    map<string, inode_ptr>::iterator dd;
@@ -52,24 +50,37 @@ void fn_cat (inode_state& state, const wordvec& words){
       }
    }
 
-   throw command_error("cat: "+words[1]+": No such file or directory");
+   throw command_error("cat: "+words[1]+": No such file or directory"); 
+   DEBUGF ('c', state);
+   DEBUGF ('c', words);
 }
 
 void fn_cd (inode_state& state, const wordvec& words){
    DEBUGF ('c', state);
    DEBUGF ('c', words);
-   map<string, inode_ptr>::iterator cd;
-   map<string, inode_ptr> dirents = 
+   if(words.size() > 2)
+      throw command_error ("cd: too many operands");
+   else if(words.size() == 1)
+      state.getCWD() = state.getRoot();
+   else{  
+      map<string, inode_ptr>::iterator cd;
+      map<string, inode_ptr> dirents = 
       state.getCWD()->getContents()->getDirents();
-   for(cd = dirents.begin(); cd != dirents.end(); cd++){
-      if(cd->second->getContents()->getType() != "plain file"){
-         if(cd->first == words[1])
-           state.getCWD() = cd->second;
+      bool foundDirectory = false;
+      for(cd = dirents.begin(); cd != dirents.end(); cd++){
+         if(cd->first == words[1]){ 
+            if(cd->second->getContents()->getType() == "directory"){
+               state.getCWD() = cd->second;
+               foundDirectory = true;
+            }
+            else
+               throw command_error(
+                  "cd: '" + words[1] + "' is a plain file");
+        }
       }
-      else
-         throw command_error ("cd: " + words[1] 
-            + ": is a plain file.");
-  } 
+     if(foundDirectory == false)
+        throw command_error("cd: '" + words[1] + "' does not exist");
+   }   
 }
 
 void fn_echo (inode_state& state, const wordvec& words){
@@ -148,15 +159,15 @@ void fn_lsr (inode_state& state, const wordvec& words){
 }
 
 void fn_make (inode_state& state, const wordvec& words){
-   DEBUGF ('c', state);
-   DEBUGF ('c', words);
    if(words.size() < 2) {
-       throw command_error("make: invalid argument; missing words");
-   return;
+      throw command_error("make: invalid argument; missing words");
+      return;
    }
    inode_ptr new_file = state.getCWD()->getContents()->mkfile(
            words[1], state);
    new_file->getContents()->writefile(words);
+   DEBUGF ('c', state);
+   DEBUGF ('c', words);
 }
 
 void fn_mkdir (inode_state& state, const wordvec& words){
@@ -171,12 +182,12 @@ void fn_mkdir (inode_state& state, const wordvec& words){
             + words[1] + "': File exists");
    }
    state.getCWD()->getContents()->mkdir(words[1], state);
-
 }
 
 void fn_prompt (inode_state& state, const wordvec& words){
    DEBUGF ('c', state);
    DEBUGF ('c', words);
+   state.prompt() = (words[1] + " ");
 }
 
 void fn_pwd (inode_state& state, const wordvec& words){
@@ -201,7 +212,8 @@ void fn_rm (inode_state& state, const wordvec& words){
          if 
    }
 
-   throw command_error("cat: "+words[1]+": No such file or directory");*/
+   throw command_error(
+      "cat: "+words[1]+": No such file or directory");*/
 }
 
 void fn_rmr (inode_state& state, const wordvec& words){

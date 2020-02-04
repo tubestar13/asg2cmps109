@@ -1,5 +1,5 @@
 // $Id: commands.cpp,v 1.18 2019-10-08 13:55:31-07 - - $
-
+// Olivia Wong omwong, Ryan Kim rysukim
 #include "commands.h"
 #include "debug.h"
 
@@ -15,6 +15,7 @@ command_hash cmd_hash {
    {"prompt", fn_prompt},
    {"pwd"   , fn_pwd   },
    {"rm"    , fn_rm    },
+   {"rmr"   , fn_rmr   },
 };
 
 command_fn find_command_fn (const string& cmd) {
@@ -34,7 +35,7 @@ command_error::command_error (const string& what):
 }
 
 int exit_status_message() {
-   int status = exec::status();
+  int status = exec::status();
    cout << exec::execname() << ": exit(" << status << ")" << endl;
    return status;
 }
@@ -93,6 +94,9 @@ void fn_echo (inode_state& state, const wordvec& words){
 void fn_exit (inode_state& state, const wordvec& words){
    DEBUGF ('c', state);
    DEBUGF ('c', words);
+   if (words.size() > 1) {
+       ;
+   }
    throw ysh_exit();
 }
 
@@ -190,7 +194,12 @@ void fn_mkdir (inode_state& state, const wordvec& words){
 void fn_prompt (inode_state& state, const wordvec& words){
    DEBUGF ('c', state);
    DEBUGF ('c', words);
-   state.prompt() = (words[1] + " ");
+   string p = "";
+   int s = static_cast<int>(words.size());
+   for (int i = 1; i < s; i ++) {
+      p = p + words[i] + " ";
+   }
+   state.prompt() = (p);
 }
 
 void fn_pwd (inode_state& state, const wordvec& words){

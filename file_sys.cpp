@@ -95,8 +95,16 @@ inode_ptr base_file::mkfile (const string&, inode_state& state) {
 
 size_t plain_file::size() const {
    size_t size {0};
+   int s = 0;
+   int i = 0;
+   for (string word: data) {
+      i++;
+      if (i < 3) { continue; }
+      s += (word.length());
+   }
+   s += (data.size() - 3); 
    DEBUGF ('i', "size = " << size);
-   return size;
+   return s;
 }
 
 const wordvec& plain_file::readfile() const {

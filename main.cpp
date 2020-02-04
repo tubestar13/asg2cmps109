@@ -68,6 +68,7 @@ int main (int argc, char** argv) {
             // function.  Complain or call it.
             wordvec words = split (line, " \t");
             DEBUGF ('y', "words = " << words);
+            if (words.at(0) == "#") { continue; }
             command_fn fn = find_command_fn (words.at(0));
             fn (state, words);
          }catch (command_error& error) {

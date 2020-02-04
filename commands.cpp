@@ -233,17 +233,16 @@ void fn_rmr (inode_state& state, const wordvec& words){
    for(d2p = dirents.begin(); d2p != dirents.end(); d2p++){
       if(d2p->second->getContents()->getType() == "directory" 
          and d2p->first != "." and d2p->first != "..") {
-         cout << d2p->second->getPath() << ":" << endl;
-         d2p->second->getContents()->printDirents();
+         //cout << d2p->second->getPath() << ":" << endl;
          state.getCWD() = d2p->second;
-         fn_lsr(state, words);
+         fn_rmr(state, words);
+         state.getCWD()->getContents()->remove(words[1]);
+         //d2p->second->getContents()->printDirents();
+         //fn_lsr(state, words);
          //break;
       }
    }
    state.getCWD() = temp;  
-   DEBUGF ('c', state);
-   DEBUGF ('c', words);
-
    DEBUGF ('c', state);
    DEBUGF ('c', words);
 }

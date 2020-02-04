@@ -60,7 +60,7 @@ void fn_cd (inode_state& state, const wordvec& words){
    DEBUGF ('c', words);
    if(words.size() > 2)
       throw command_error ("cd: too many operands");
-   else if(words.size() == 1)
+   else if(words.size() == 1 or words[1] == "/")
       state.getCWD() = state.getRoot();
    else{  
       map<string, inode_ptr>::iterator cd;
@@ -224,21 +224,26 @@ void fn_rm (inode_state& state, const wordvec& words){
 }
 
 void fn_rmr (inode_state& state, const wordvec& words){
-  /* inode_ptr temp = state.getCWD();
+   // depth-first postorder traversal
+   inode_ptr temp = state.getCWD();
    map<string, inode_ptr>::iterator d2p;
    map<string, inode_ptr> dirents = 
       state.getCWD()->getContents()->getDirents();
+
    for(d2p = dirents.begin(); d2p != dirents.end(); d2p++){
       if(d2p->second->getContents()->getType() == "directory" 
          and d2p->first != "." and d2p->first != "..") {
          cout << d2p->second->getPath() << ":" << endl;
          d2p->second->getContents()->printDirents();
          state.getCWD() = d2p->second;
-         fn_rmr(state, words);
-         break;
+         fn_lsr(state, words);
+         //break;
       }
    }
-   state.getCWD() = temp;  */
+   state.getCWD() = temp;  
+   DEBUGF ('c', state);
+   DEBUGF ('c', words);
+
    DEBUGF ('c', state);
    DEBUGF ('c', words);
 }

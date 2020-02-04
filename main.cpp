@@ -1,4 +1,5 @@
 // $Id: main.cpp,v 1.10 2019-10-08 13:55:31-07 - - $
+// Olivia Wong omwong, Ryan Kim rysukim
 
 #include <cstdlib>
 #include <iostream>
